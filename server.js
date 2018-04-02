@@ -24,13 +24,13 @@ app.get('/api/v1/items', (request, response) => {
 });
 
 app.post('/api/v1/items', (request, response) => {
-  const { name } = request.body;
-  if (!name) {
+  const item = request.body;
+  if (!item.name) {
     return response.status(422).send({error: 'Please use a "name" parameter in your request'})
   }
-  database('items').insert(name, 'id')
-    .then(item => {
-      response.status(201).json({ created: item[0]})
+  database('items').insert(item, 'id')
+    .then(items => {
+      response.status(201).json({ created: items[0]})
     })
     .catch((error) => {
       response.status(500).json({ error })
