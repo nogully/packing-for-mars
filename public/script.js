@@ -1,3 +1,4 @@
+$(document).ready(() => loadItems());
 $('#item-submit').on('click', () => addItem());
   
 
@@ -8,11 +9,18 @@ const loadItems = async () => {
     const list = await response.json();
     if (list) {
       list.forEach(item => {
-        console.log(item.name)
-        $('main').append(`<p>${item.name}</p>`)
+        const checked = item.packed === 't' ? true : false;
+        $('main').append(`
+          <article>
+          <h2>${item.name}</h2>
+          <input id="checkbox" type="checkbox" checked="${checked}">
+          <label for="checkbox">Packed</label>
+          <h4>DELETE</h4>
+          </article>
+        `)
       })
     } else {
-      $('main').append(`<p>Try adding some items!</p>`)
+      $('main').append(`<h3>Try adding some items</h3>`)
     }
   } catch (error) {
     throw error;

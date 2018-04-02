@@ -1,13 +1,13 @@
-
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('table_name').del()
+  return knex('items').del()
     .then(function () {
-      // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
+      return Promise.all([
+        // Inserts seed entries
+        knex('items').insert({id: 1, name: 'shoes', packed: 'f'}),
+        knex('items').insert({id: 2, name: 'helmet', packed: 't'}),
+        knex('items').insert({id: 3, name: 'chocolate', packed: 't'})
       ]);
-    });
+    }).then(() => console.log('Seeding complete!'))
+    .catch(error => console.log(`Error seeding data: ${error}`))
 };
