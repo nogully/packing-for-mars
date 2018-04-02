@@ -1,13 +1,19 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
-app.set('port', process.env.PORT || 3000);
-app.locals.title = 'Mars Packing List';
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+
+app.use(bodyParser.json());
+app.set('port', process.env.PORT || 3000); 
 
 app.use(express.static('public'));
 
-app.get('/', (request, response) => {
-  response.send('Oh hi');
+app.locals.title = 'Mars Packing List';
+
+app.get('/api/v1/items', (request, response) => {
 });
 
 app.listen(app.get('port'), () => {
