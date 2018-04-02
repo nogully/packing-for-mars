@@ -1,9 +1,15 @@
 $(document).ready(() => loadItems());
 $('#item-submit').on('click', () => addItem());
-$('main').on('click', 'article', function () {
-  const itemId = $(this).attr('id');
+$('main').on('click', 'button', function () {
+  const itemId = $(this).parent().attr('id');
   deleteItem(itemId);
-  $(this).remove();
+  $(this).parent().remove();
+}); 
+$('main').on('click', '#checkbox', function () {
+  const itemId = $(this).parent().attr('id');
+  const check = $(this).prop('checked');
+  updateChecked(itemId, check);
+  $(this).prop('checked', !$(this).prop('checked'));
 }); 
 
 const loadItems = async () => {
@@ -13,11 +19,11 @@ const loadItems = async () => {
     const list = await response.json();
     if (list) {
       list.forEach(item => {
-        const checked = item.packed === 't' ? true : false;
+        const checked = item.packed === 't' ? checked : '';
         $('main').append(`
           <article id="${item.id}">
           <h2>${item.name}</h2>
-          <input id="checkbox" type="checkbox" checked="${checked}">
+          <input id="checkbox" type="checkbox" ${checked}>
           <label for="checkbox">Packed</label>
           <button>DELETE</button>
           </article>
@@ -36,11 +42,11 @@ const addItem = () => {
   const item = $('#item-input').val();
   if (item) {
     sendItemToDb(item);
-    loadItems();
   } else {
     $('main').append(`<p>Try adding some items!</p>`)
   }
-  
+  loadItems();
+  $('#item-input').val('');
 };
 
 const sendItemToDb = async (item) => {
@@ -58,7 +64,6 @@ const sendItemToDb = async (item) => {
   } catch (error) { 
     throw error;
   }
-  
 };
 
 const deleteItem = async (id) => {
@@ -67,6 +72,19 @@ const deleteItem = async (id) => {
     const response = await fetch(`/api/v1/items/${id}`, {
       method: 'DELETE', 
       body: JSON.stringify({ id }), 
+      headers: { 'Content-Type': 'application/json'}
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+const updateChecked = async (id, checked) => {
+  event.preventDefault();
+  try {
+    const response = await fetch(`/api/v1/items/${id}`, {
+      method: 'PATCH', 
+      body: JSON.stringify({ packed: checked }), 
       headers: { 'Content-Type': 'application/json'}
     });
   } catch (error) {
