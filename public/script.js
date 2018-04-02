@@ -3,22 +3,41 @@ $('#item-submit').on('click', () => addItem());
 
 const loadItems = async () => {
   $('main').empty();
-  const response = await fetch('/api/v1/items');
-  const list = await response.json();
-  list.forEach(item => {
-    $('main').append(`<p>${item}</p>`)
-  })
+  try {
+    const response = await fetch('/api/v1/items');
+    const list = await response.json();
+    if (list) {
+      list.forEach(item => {
+        $('main').append(`<p>${item}</p>`)
+      })
+    } else {
+      $('main').append(`<p>Try adding some items!</p>`)
+    }
+  } catch (error) {
+    throw error;
+  }
 }
 
 const addItem = () => {
   event.preventDefault();
   const item = $('#item-input').val();
-  console.log(item)
-  sendItemToDb();
-  loadItems();
+  if (item) {
+    sendItemToDb(item);
+    loadItems();
+  } else {
+    $('main').append(`<p>Try adding some items!</p>`)
+  }
+  
 };
 
 const sendItemToDb = (item) => {
-  console.log('I wanna send it to the db')
+  const response = await fetch('/api/v1/items', {
+    method: 'POST', 
+    headers: { 'Content-Type': 'application/json'}
+    body: JSON.stringify({
+      name: item
+    })
+  })
+  console.log(response)
 };
 
