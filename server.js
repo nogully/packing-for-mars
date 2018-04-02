@@ -24,6 +24,14 @@ app.get('/api/v1/items', (request, response) => {
 });
 
 app.post('/api/v1/items', (request, response) => {
+  const { item } = request.body;
+  database('items').insert(item, 'id')
+    .then(item => {
+      response.status(201).json({item, id: item[0], created: 'yes'})
+    })
+    .catch((error) => {
+      response.status(500).json({ error })
+    });
 });
 
 app.listen(app.get('port'), () => {
