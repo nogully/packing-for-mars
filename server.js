@@ -1,13 +1,37 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
-app.set('port', process.env.PORT || 3000);
-app.locals.title = 'Mars Packing List';
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+
+app.use(bodyParser.json());
+app.set('port', process.env.PORT || 3000); 
 
 app.use(express.static('public'));
 
-app.get('/', (request, response) => {
-  response.send('Oh hi');
+app.locals.title = 'Mars Packing List';
+
+app.get('/api/v1/items', (request, response) => {
+  database('items').select()
+    .then(items => {
+      response.status(200).json(items);
+    })
+    .catch((error) => { 
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/items', (request, response) => {
+  const { item } = request.body;
+  database('items').insert(item, 'id')
+    .then(item => {
+      response.status(201).json({item, id: item[0], created: 'yes'})
+    })
+    .catch((error) => {
+      response.status(500).json({ error })
+    });
 });
 
 app.listen(app.get('port'), () => {
