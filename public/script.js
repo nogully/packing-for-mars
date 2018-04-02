@@ -31,13 +31,20 @@ const addItem = () => {
 };
 
 const sendItemToDb = (item) => {
-  const response = await fetch('/api/v1/items', {
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json'}
-    body: JSON.stringify({
-      name: item
-    })
-  })
-  console.log(response)
+  try {
+    const response = await fetch('/api/v1/items', {
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json'}
+      body: JSON.stringify({
+        name: item
+      })
+    }) 
+    if (response) {
+      console.log(response)
+    } 
+  } catch (error) { 
+    throw error;
+  }
+  
 };
 
