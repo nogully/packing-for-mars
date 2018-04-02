@@ -41,11 +41,10 @@ const sendItemToDb = async (item) => {
       })
     }) 
     if (response) {
-      console.log(response.json())
+      console.log(`${item} sent to db`)
     } 
   } catch (error) { 
     throw error;
   }
   
 };
-
