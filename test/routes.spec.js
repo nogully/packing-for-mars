@@ -49,7 +49,7 @@ describe('API Routes', () => {
   });
 
   describe('GET /api/v1/items', () => {
-    it('should return all of the packing list', () => {
+    it('should return all items in the packing list', () => {
       return chai.request(server)
       .get('/api/v1/items')
       .then(response => {
@@ -70,18 +70,71 @@ describe('API Routes', () => {
       return chai.request(server)
       .post('/api/v1/items') 
       .send({             
-        body: { name: 'oxygen'} 
+        name: 'oxygen'
       })
       .then(response => {
         response.should.have.status(201);
-        response.body.should.be.a('object');
-        response.body.should.have.property('created');
-        response.body.created.should.equal('id');
       })
       .catch(error => {
         throw error;
       });
     });
+
+    it('should return status 422 if missing params in the body', () => {
+      return chai.request(server)
+        .post('/api/v1/items')
+        .send({ body: 'hello' })
+        .then(response => {
+          response.should.have.status(422)
+          response.body.error.should.equal('Please use a "name" parameter in your request')
+        })
+        .catch( error => {
+          throw error
+        })
+    })
   });
 
+  describe('PATCH /api/v1/items/:id', () => {
+    it('should return a success message when the checkmark is changed', () => {
+      return chai.request(server)
+        .patch('/api/v1/items/2')
+        .send({
+          packed: true 
+        })
+        .then( response => {
+          response.should.have.status(200);
+          response.body.should.equal('Updated packed status on 2')
+        })
+        .catch( error => {
+          throw error;
+        })
+    })
+    it('should return a 404 error if there is no item with that id', () => {
+      return chai.request(server)
+        .patch('/api/v1/items/:99')
+        .send({ 
+          packed: true
+        })
+        .then(response => {
+          response.should.have.status(404);
+          response.body.error.should.equal('That item does not exist')
+        })
+        .catch( error => {
+          throw error;
+        })
+    })
+  });
+
+  describe('DELETE /api/v1/items/:id', () => {
+    it('should delete the expected item', () => {
+      return chai.request(server)
+      .delete('/api/v1/items/3')
+      .then( response => {
+        response.should.have.status(202);
+      })
+      .catch(error => {
+        throw error;
+      })
+    })
+  })
 });
