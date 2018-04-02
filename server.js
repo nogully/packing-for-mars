@@ -55,17 +55,13 @@ app.delete('/api/v1/items/:id', (request, response) => {
 })
 
 app.patch('/api/v1/items/:id', (request, response) => {
-  let packedStatus;
-  if (request.body.packed === true) {
-    packedStatus = 't';
-  } else {
-    packedStatus = 'f';
-  }
-  database('items').where('id', request.params.id).select()
+  const packedStatus = request.body.packed;
+  const itemId = request.params.id;
+  database('items').where('id', itemId).select()
     .then(result => {
       if (result.length) {
-        database('items').where('id', id).update({ packed: packedStatus })
-          .then(() => response.status(200).json(`Updated packed status on ${id}`));
+        database('items').where('id', itemId).update({ packed: packedStatus })
+          .then(() => response.status(200).json(`Updated packed status on ${itemId}`));
       } else {
         return response.status(404).send({ error: 'That item does not exist' });
       }
