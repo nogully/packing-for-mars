@@ -1,9 +1,9 @@
 $(document).ready(() => loadItems());
 $('#item-submit').on('click', () => addItem());
 $('main').on('click', 'article', function () {
-  const itemId = $(this).parent().attr('id');
-  removeItem(itemId);
-  $(this).parent().remove();
+  const itemId = $(this).attr('id');
+  deleteItem(itemId);
+  $(this).remove();
 }); 
 
 const loadItems = async () => {
