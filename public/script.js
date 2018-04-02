@@ -1,6 +1,10 @@
 $(document).ready(() => loadItems());
 $('#item-submit').on('click', () => addItem());
-  
+$('main').on('click', 'article', function () {
+  const itemId = $(this).parent().attr('id');
+  removeItem(itemId);
+  $(this).parent().remove();
+}); 
 
 const loadItems = async () => {
   $('main').empty();
@@ -15,7 +19,7 @@ const loadItems = async () => {
           <h2>${item.name}</h2>
           <input id="checkbox" type="checkbox" checked="${checked}">
           <label for="checkbox">Packed</label>
-          <h4>DELETE</h4>
+          <button>DELETE</button>
           </article>
         `)
       })
@@ -56,3 +60,16 @@ const sendItemToDb = async (item) => {
   }
   
 };
+
+const deleteItem = async (id) => {
+  event.preventDefault();
+  try {
+    const response = await fetch(`/api/v1/items/${id}`, {
+      method: 'DELETE', 
+      body: JSON.stringify({ id }), 
+      headers: { 'Content-Type': 'application/json'}
+    });
+  } catch (error) {
+    throw error;
+  }
+}
