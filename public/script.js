@@ -8,7 +8,7 @@ const loadItems = async () => {
     const list = await response.json();
     if (list) {
       list.forEach(item => {
-        $('main').append(`<p>${item}</p>`)
+        $('main').append(`<p>${item.name}</p>`)
       })
     } else {
       $('main').append(`<p>Try adding some items!</p>`)

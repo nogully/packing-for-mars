@@ -16,10 +16,10 @@ app.locals.title = 'Packing for Mars';
 app.get('/api/v1/items', (request, response) => {
   database('items').select()
     .then(items => {
-      response.status(200).json(items);
+      return response.status(200).json(items);
     })
     .catch((error) => { 
-      response.status(500).json({ error });
+      return response.status(500).json({ error });
     });
 });
 
@@ -40,3 +40,5 @@ app.post('/api/v1/items', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+module.exports = app;
