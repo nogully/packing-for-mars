@@ -18,8 +18,9 @@ const loadItems = async () => {
     const response = await fetch('/api/v1/items');
     const list = await response.json();
     if (list) {
+      list.sort();
       list.forEach(item => {
-        const checked = item.packed === 't' ? 'checked' : '';
+        const checked = item.packed ? 'checked' : '';
         $('main').append(`
           <article id="${item.id}">
           <h2>${item.name}</h2>
@@ -58,9 +59,6 @@ const sendItemToDb = async (item) => {
         name: item
       })
     }) 
-    if (response) {
-      console.log(`${item} sent to db`)
-    } 
   } catch (error) { 
     throw error;
   }
@@ -86,6 +84,12 @@ const updateChecked = async (id, checked) => {
       body: JSON.stringify({ packed: checked }), 
       headers: { 'Content-Type': 'application/json'}
     });
+    const success = await response.json();
+    if (success) {
+      loadItems();
+    } else {
+      `<p>Something went wrong!</p>`
+    }
   } catch (error) {
     throw error;
   }
