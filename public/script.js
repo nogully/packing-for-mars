@@ -9,7 +9,7 @@ $('main').on('click', '#checkbox', function () {
   const itemId = $(this).parent().attr('id');
   const check = $(this).prop('checked');
   updateChecked(itemId, check);
-  $(this).prop('checked', !$(this).prop('checked'));
+  $(this).prop('checked', !check);
 }); 
 
 const loadItems = async () => {
@@ -19,7 +19,7 @@ const loadItems = async () => {
     const list = await response.json();
     if (list) {
       list.forEach(item => {
-        const checked = item.packed === 't' ? checked : '';
+        const checked = item.packed === 't' ? 'checked' : '';
         $('main').append(`
           <article id="${item.id}">
           <h2>${item.name}</h2>
@@ -80,7 +80,7 @@ const deleteItem = async (id) => {
 }
 
 const updateChecked = async (id, checked) => {
-  event.preventDefault();
+  console.log(id, checked)
   try {
     const response = await fetch(`/api/v1/items/${id}`, {
       method: 'PATCH', 
