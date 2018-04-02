@@ -30,17 +30,17 @@ const addItem = () => {
   
 };
 
-const sendItemToDb = (item) => {
+const sendItemToDb = async (item) => {
   try {
     const response = await fetch('/api/v1/items', {
       method: 'POST', 
-      headers: { 'Content-Type': 'application/json'}
+      headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify({
         name: item
       })
     }) 
     if (response) {
-      console.log(response)
+      console.log(response.json())
     } 
   } catch (error) { 
     throw error;

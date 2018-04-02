@@ -11,7 +11,7 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(express.static('public'));
 
-app.locals.title = 'Mars Packing List';
+app.locals.title = 'Packing for Mars';
 
 app.get('/api/v1/items', (request, response) => {
   database('items').select()
@@ -24,10 +24,13 @@ app.get('/api/v1/items', (request, response) => {
 });
 
 app.post('/api/v1/items', (request, response) => {
-  const { item } = request.body;
-  database('items').insert(item, 'id')
+  const { name } = request.body;
+  if (!name) {
+    return response.status(422).send({error: 'Please use a "name" parameter in your request'})
+  }
+  database('items').insert(name, 'id')
     .then(item => {
-      response.status(201).json({item, id: item[0], created: 'yes'})
+      response.status(201).json({ created: item[0]})
     })
     .catch((error) => {
       response.status(500).json({ error })
