@@ -54,6 +54,22 @@ app.delete('/api/v1/items/:id', (request, response) => {
     })
 })
 
+app.patch('/api/v1/items/:id', (request, response) => {
+  const { packed } = request.body;
+  database('items').where('id', request.params.id).select()
+    .then(result => {
+      if (result.length) {
+        database('items').where('id', id).update({ packed: packed })
+          .then(() => response.status(200).json(`Updated packed status on ${id}`));
+      } else {
+        return response.status(404).send({ error: 'That item does not exist' });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    })
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
