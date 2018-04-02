@@ -1,8 +1,13 @@
 $('#item-submit').on('click', () => addItem());
+  
 
-
-const loadItems = () => {
+const loadItems = async () => {
   $('main').empty();
+  const response = await fetch('/api/v1/items');
+  const list = await response.json();
+  list.forEach(item => {
+    $('main').append(`<p>${item}</p>`)
+  })
 }
 
 const addItem = () => {
@@ -10,6 +15,7 @@ const addItem = () => {
   const item = $('#item-input').val();
   console.log(item)
   sendItemToDb();
+  loadItems();
 };
 
 const sendItemToDb = (item) => {
