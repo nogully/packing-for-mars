@@ -80,7 +80,6 @@ const deleteItem = async (id) => {
 }
 
 const updateChecked = async (id, checked) => {
-  console.log(id, checked)
   try {
     const response = await fetch(`/api/v1/items/${id}`, {
       method: 'PATCH', 

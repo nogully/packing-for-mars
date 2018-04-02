@@ -30,7 +30,7 @@ app.post('/api/v1/items', (request, response) => {
   }
   database('items').insert(item, 'id')
     .then(items => {
-      response.status(201).json({ created: items[0]})
+      response.status(201).json({ name: item.name, id: items[0] })
     })
     .catch((error) => {
       response.status(500).json({ error })
