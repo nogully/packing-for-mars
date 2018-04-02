@@ -14,6 +14,16 @@ app.use(express.static('public'));
 app.locals.title = 'Mars Packing List';
 
 app.get('/api/v1/items', (request, response) => {
+  database('items').select()
+    .then(items => {
+      response.status(200).json(items);
+    })
+    .catch((error) => { 
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/items', (request, response) => {
 });
 
 app.listen(app.get('port'), () => {
