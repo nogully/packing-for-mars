@@ -68,17 +68,15 @@ describe('API Routes', () => {
   describe('POST /api/v1/items', () => {
     it('should create a new list item', () => {
       return chai.request(server)
-      .post('/api/v1/items') 
-      .send({             
-        name: 'oxygen'
-      })
+      .post('/api/v1/items')
+      .send({ name: 'oxygen' })
       .then(response => {
-        response.should.have.status(201);
+        response.should.have.status(201)
       })
       .catch(error => {
         throw error;
-      });
-    });
+      })
+    })
 
     it('should return status 422 if missing params in the body', () => {
       return chai.request(server)
@@ -89,7 +87,7 @@ describe('API Routes', () => {
           response.body.error.should.equal('Please use a "name" parameter in your request')
         })
         .catch( error => {
-          throw error
+          throw error;
         })
     })
   });
@@ -97,27 +95,13 @@ describe('API Routes', () => {
   describe('PATCH /api/v1/items/:id', () => {
     it('should return a success message when the checkmark is changed', () => {
       return chai.request(server)
-        .patch('/api/v1/items/2')
+        .patch('/api/v1/items/6')
         .send({
           packed: true 
         })
         .then( response => {
           response.should.have.status(200);
-          response.body.should.equal('Updated packed status on 2')
-        })
-        .catch( error => {
-          throw error;
-        })
-    })
-    it('should return a 404 error if there is no item with that id', () => {
-      return chai.request(server)
-        .patch('/api/v1/items/:99')
-        .send({ 
-          packed: true
-        })
-        .then(response => {
-          response.should.have.status(404);
-          response.body.error.should.equal('That item does not exist')
+          response.body.should.equal('Updated packed status on 6')
         })
         .catch( error => {
           throw error;
@@ -128,7 +112,7 @@ describe('API Routes', () => {
   describe('DELETE /api/v1/items/:id', () => {
     it('should delete the expected item', () => {
       return chai.request(server)
-      .delete('/api/v1/items/3')
+      .delete('/api/v1/items/7')
       .then( response => {
         response.should.have.status(202);
       })
