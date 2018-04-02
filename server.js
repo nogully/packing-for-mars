@@ -37,6 +37,23 @@ app.post('/api/v1/items', (request, response) => {
     });
 });
 
+
+app.delete('/api/v1/items/:id', (request, response) => {
+  database('items').where('id', request.params.id).del()
+    .then(id => {
+      if (id) {
+        response.status(202).json({ id })
+      } else {
+        response.status(404).json({
+          error: `Could not find item with id ${request.params.id}`
+        })
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    })
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });

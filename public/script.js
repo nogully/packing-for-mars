@@ -11,7 +11,7 @@ const loadItems = async () => {
       list.forEach(item => {
         const checked = item.packed === 't' ? true : false;
         $('main').append(`
-          <article>
+          <article id="${item.id}">
           <h2>${item.name}</h2>
           <input id="checkbox" type="checkbox" checked="${checked}">
           <label for="checkbox">Packed</label>
